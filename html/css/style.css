@@ -1,0 +1,336 @@
+@charset "utf-8";
+
+/* 공통 */
+body {
+    position: relative;
+    width: 100%;
+    height: auto;
+    background-color: #000;
+    color: #fff;
+    /* padding: 0 10px; */
+    /* box-sizing: border-box; */
+    line-height: 1.5;
+    /* bottom: 70px;
+    top: 50px; */
+    
+}
+
+p {
+    color: #ccc;
+}
+
+a {
+    color: #fff;
+    text-decoration: none;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+
+/* top_nav 영역 */
+
+.header {
+    width: 100%;
+    height: 50px;
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0px 20px 10px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+   
+}
+
+.logo a img {
+    width: 35px;
+}
+
+
+.top_search {
+    display: flex;
+    /* width: 280px;  */
+    height: 40px; 
+    /* position: relative; */
+    /* padding-left: 10px; */
+}
+
+.home {
+    background-color: #272727;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.home a i {
+    color: #ccc;
+}
+.home a i:hover {
+    color: #fff;
+}
+
+
+.search_wrapper {
+    display: flex;
+}
+.search_wrapper div {
+    width: 40px;
+    height: 40px;
+    line-height: 35px;
+    background-color: #272727;
+    color: #ccc;
+    padding-left: 10px;
+    box-sizing: border-box;
+    font-weight: 100;
+    font-size: 18px;
+    border-top-left-radius: 20px; border-bottom-left-radius: 20px;
+    z-index: 1;
+}
+.search_wrapper div:hover {
+    color: #fff;
+}
+#search {
+    width: 350px;
+    height: 40px;
+    padding-top: 3px;
+    background-color: #272727;
+    border: none;
+    border-radius: 20px; 
+    color: #fff;
+    font-size: 15px;
+    margin-left: -40px;
+    text-indent: 40px;
+}
+.user_page {
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    background-color: #272727;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.user_page a {
+    display: block;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    color: #ccc;
+}
+
+.user_page a:hover {
+    color: #fff;
+}
+
+/*use_page hidden  */
+.user_page div {
+    width: 196px;
+    height: 168px;
+    background-color: #272727;
+    border-radius: 5px;
+    /* text-align: left; */
+    color: #fff;
+}
+.user_page div {
+    display: none;
+}
+.hidden {
+    cursor: pointer;
+    /* display: none; */
+}
+
+/* sidebar 영역 */
+.side_bar {
+    width: 220px;
+    /* height: 705px; */
+    position: fixed;
+    top: 50px;
+    left: 0;
+    padding: 20px;
+    /* margin-top: 10px; */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    background-color: blue;
+    color: #ccc;
+    border-radius: 5px;
+}
+
+.side_bar ul li {
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.side_bar ul li:hover {
+    color: #fff;
+}
+
+.side_bar ul li:last-child {
+    border-bottom: 1px solid rgba(128, 127, 127, .2);
+    padding-bottom: 15px;
+}
+
+.side_bar ul li i {
+    margin-right: 20px;
+}
+
+.side_bar p {
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+.side_bar p:hover {
+    color: #fff;
+}
+
+
+/* main  영역 */
+.main {
+    /* width: calc(100% - 220px); */
+    /* height: 705px; */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    /* margin-left: 220px; */
+    background-color: yellow;
+    border-radius: 5px;
+    /* margin-top: 60px; */
+    /* padding: 30px 20px;  자식태그에 마진 패딩 주고 삭제해야 함. */
+    /* box-sizing: border-box; */
+    /* overflow-y: scroll; */
+    position: absolute;
+    top: 50px;
+}
+
+
+
+.cont_wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.cont_wrapper p {
+    font-size: 12px;
+    color: #ccc;
+}
+
+.cont_wrapper a:hover {
+    text-decoration: underline;
+    color: #fff;
+}
+
+.list {
+    display: flex;
+    flex-wrap: nowrap;
+}
+.list li {
+    width: 15%;
+    height: 250px;
+    background-color: #27272750;
+    margin: 10px;
+    border-radius: 5px;
+    
+}
+
+
+/* 스크롤바 */
+/* 스크롤의 너비 */
+.scroll_bar::-webkit-scrollbar {width: 13px;}
+/* 스크롤의 길이 및 색상 */
+.scroll_bar::-webkit-scrollbar-thumb {background: #8F8F8F; }
+/* 스크롤바 뒷 배경 색상 */
+.scroll_bar::-webkit-scrollbar-track {background:  #121212;}
+
+
+
+
+/* 하단 컨트롤러 영역 */
+.bottom_bar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 70px;
+    background-color:red;
+    z-index: 9999;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+    box-sizing: border-box;
+}
+
+#lastfooter {
+    height: 70px;
+}
+
+.now_playing div {
+    float: left;
+}
+.now_playing div::after {
+    display: block;
+    content: '';
+    float: none;
+    clear: both;
+}
+
+.now_playing img {
+    width: 50px;
+    height: 50px;
+    margin-right: 20px;
+}
+
+.now_playing div:nth-child(2) {
+    margin-right: 20px;
+    
+}
+.now_playing div:nth-child(2):hover {
+    cursor: pointer;
+    
+}
+.now_playing div:nth-child(2) h3 {
+    font-size: 15px; 
+}
+.now_playing div:nth-child(2) h3:hover {
+    text-decoration: underline;
+}
+.now_playing div:nth-child(2) p {
+    font-size: 13px;
+    color: #ccc;
+}
+.now_playing div:nth-child(2) p:hover {
+    text-decoration: underline;
+}   
+
+.now_playing button {
+    background-color: #000;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 15px;
+}
+.now_playing button:hover {
+    color: #fff;
+}
+
+
+.controller img {
+    height: 60px;
+}
+
+.volume i {
+    
+    cursor: pointer;
+    margin-left: -180px;
+}
+
+
+/*
+1. F11 눌러서 전체화면 했을 때 하단 여백 너무 많음 
+2. 하단 .now_playing 하트 버튼 눌렀을 때 ' 내 라이브러리에 추가하기' 문구 넣기
+3. 볼륨컨트롤러 색상 및 사이즈 지정
+4. 볼륨 아이콘 눌렀을 때 뮤트설정하기.
+ */
