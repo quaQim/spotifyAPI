@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Test</title>
+</head>
+<body>
+
+    <div>
+        <h1>Data_get Test</h1>
+        <form id="searchForm">
+            <fieldset>
+                <input type="search" id="query" placeholder="search..">
+                <button type="submit">검색</button>
+            </fieldset>
+        </form>
+    </div>
+
+    <ul id="list">
+
+    </ul>
+    
+    <script src="../GSKim/EZen/Javascript/node_modules/axios/dist/axios.min.js"></script>
+    <script>
+        
+        document.querySelector('#searchForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const queryField = document.querySelector('#query');
+            queryKeyword = queryField.value.trim();
+
+            if (!queryKeyword) {  // 검색어를 입력하지 않았을 때
+                alert('검색어를 입력하세요');
+                queryField.focus();
+                return;
+
+            }
+            get_music_search();
+
+        });
+
+        async function get_music_search(token) {
+
+            const list = document.querySelector('#list');
+
+            Array.from(list.getElementsByTagName('li')).map((v, i) => {
+                list.removeChild(v);
+            });
+            
+            const clientId = '7dad908171c54d1bbd78abda9ca2471d';
+            const clientSecret = 'ada97055bcf849f1b40c0c882c4816a1';
+            let json = null;
+
+            try {
+                    json = await axios.get('https://api.spotify.com/v1/search?type=album&include_external', {
+                        params: {
+                            query: queryKeyword,
+                        },
+                        headers: {
+                            'Authorization' : 'Bearer ' + token,
+            // 
+            // BQD_kqXe-dsuaAujYaGXUsg2ClSsU_YENLr6BHiMRLxG25u3wNJx-zvudlBNnxoW-CE5nooC_JUrWoAUmVdcwcnzmlFrNJ_fkbOCnJC8AacaaUw92djBRHtt35avU-f2l4lStPxwlny21wnCsTZocIx6l8RnrBtreSZYhjenRmrLj4Hj17_YxnS8q6k5Cq-vEl9b-tWg0zHmGJnj2hMzrN4d5V1DItIZCAtRDtXst2SKmwWfKF9jG_-9kQ
+                        },
+                    });
+
+                    // 응답 결과 확인
+                    console.log(json);
+                }
+                catch (error) {
+                    console.error(`[Error Code] ${error.code}`);
+                    console.error(`[Error Message] ${error.message}`);
+                    let alertMsg = error.message;
+
+                    if (error.response !== undefined) {
+                        const errorMsg = `${error.response.status} error - ${error.response.statusTex}`;
+                        console.error(`[HTTP Status] ${errorMsg}`);
+
+                        alertMsg += `\n${errorMsg}`;
+                    }
+                    alert(alertMsg);
+                    return;
+                }
+
+                const { data } = json;
+
+
+
+                data.albums['items'].map((v, i) => {
+                    console.log(v);
+                    console.log(v.name);
+
+                    const li = document.createElement('li');
+                    list.appendChild(li);
+
+                    const a = document.createElement('a');
+                    a.setAttribute('href', v.external_urls);
+                    a.setAttribute('target', '_blank');
+                    li.appendChild(a);
+                    
+                    const img = document.createElement('img');
+                    img.setAttribute('src', v.images[0].url);
+                    a.appendChild(img);
+
+                    const title = document.createElement('span');
+                    title.innerHTML = v.name;
+                    li.appendChild(title);
+                    
+                }); 
+
+            /** token */
+            const APIController = (function() {
+            // private methods
+                const _getToken = async () => {
+
+                    const result = await fetch('https://accounts.spotify.com/api/token', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type' : 'application/x-www-form-urlencoded', 
+                            'Authorization' : 'Basic ' + btoa(clientId + ':' + clientSecret)
+                        },
+                        body: 'grant_type=client_credentials'
+                    });
+
+                    const tokenData = await result.json();
+                    console.log(tokenData.access_token);
+                    return tokenData.access_token;
+                }
+
+                return {
+                    getToken() {
+                        return _getToken();
+                    },
+                }
+            })();
+
+
+            // UI Module
+            const UIController = (function() {
+                
+                //object to hold references to html selectors
+                const DOMElements = {
+                    selectGenre: '#select_genre',
+                    selectPlaylist: '#select_playlist',
+                    buttonSubmit: '#btn_submit',
+                    divSongDetail: '#song-detail',
+                    hfToken: '#hidden_token',
+                    divSonglist: '.song-list'
+                }
+
+                //public methods
+                return {
+
+                    //method to get input fields
+                    inputField() {
+                        return {
+                            genre: document.querySelector(DOMElements.selectGenre),
+                            playlist: document.querySelector(DOMElements.selectPlaylist),
+                            tracks: document.querySelector(DOMElements.divSonglist),
+                            submit: document.querySelector(DOMElements.buttonSubmit),
+                            songDetail: document.querySelector(DOMElements.divSongDetail)
+                        }
+                    },
+                }
+            })();
+            console.log(UIController);
+            const APPController = (function(UICtrl, APICtrl) {
+
+                // get input field object ref
+                const DOMInputs = UICtrl.inputField();
+
+                // get genres on page load
+                const loadGenres = async () => {
+                    //get the token
+                    const token = await APICtrl.getToken();
+                    console.log(token);           
+                }
+
+                return {
+                    init() {
+                        console.log('App is starting');
+                        loadGenres();
+                    }
+                }
+
+            })(UIController, APIController);
+
+            // will need to call a method to load the genres on page load
+            APPController.init();
+
+            // document.querySelector('#list').addEventListener('click', (e) => {
+                
+            // })
+        }
+
+    </script>
+
+</body>
+</html>
