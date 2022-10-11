@@ -1,4 +1,4 @@
-@charset "utf-8";
+    @charset "utf-8";
 
 /* 공통 */
 body {
@@ -200,6 +200,7 @@ h2 {
     /* margin-left: 220px; */
     background-color: yellow;
     border-radius: 5px;
+    
     /* margin-top: 60px; */
     /* padding: 30px 20px;  자식태그에 마진 패딩 주고 삭제해야 함. */
     /* box-sizing: border-box; */
@@ -207,6 +208,9 @@ h2 {
     position: absolute;
     top: 50px;
 }
+/* .main #container {
+    margin: auto;
+} */
 
 
 
@@ -227,14 +231,30 @@ h2 {
 
 .list {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
+    margin: auto;
 }
 .list li {
     width: 15%;
-    height: 250px;
-    background-color: #27272750;
-    margin: 10px;
+    /* background-color: #27272750; */
+    margin: auto;
     border-radius: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    
+}
+.list li img {
+    width: 100%;
+    position: relative;
+}
+.list li span {
+    display: block;
+    color: black;  
+    text-align: center; 
+    font-size: 13px;
+    padding-bottom: 20px;
+    box-sizing: border-box;
     
 }
 

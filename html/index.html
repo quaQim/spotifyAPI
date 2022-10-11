@@ -11,9 +11,6 @@
     <!-- 아이콘 -->
     <script src="https://kit.fontawesome.com/f0e73cfa04.js" crossorigin="anonymous"></script>
 
-    <!-- 사이드바 -->
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <script src="semantic/semantic.js"></script>
 </head>
 <body>
     <div class="header">
@@ -24,9 +21,10 @@
             <div class="home">
                 <a href="#"><i class="fa-solid fa-house"></i></a>
             </div>
-            <form action="" class="search_wrapper">
-                <div><i class="fa-solid fa-magnifying-glass"></i></div>
-                <input type="search" id="search" placeholder="어떤 음악을 듣고 싶으세요?"><label for="search"></label>
+            <form id="search_wrapper">
+                <!-- <div><i class="fa-solid fa-magnifying-glass"></i></div> -->
+                <input type="search" id="search" placeholder="어떤 음악을 듣고 싶으세요?">
+                <button type="submit">검색</button>
             </form>
         </div>
         <div class="user_page">
@@ -72,14 +70,14 @@
         
     </div>
     <div class="main scroll_bar" >
-        <div> 
+        <div id="container"> 
             <div class="cont_wrapper">
                 <h2><a href="">OO님을 위한 믹스 & 추천</a> </h2>
                 <p><a href="">모두보기</a></p>
             </div>
             <div>
-                <ul class="list">
-                    <li>
+                <ul class="list" id="list1">
+                    <!-- <li>
                         <img src="" alt="">
                         <h3></h3>
                         <p></p>
@@ -108,7 +106,7 @@
                         <img src="" alt="">
                         <h3></h3>
                         <p></p>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>
@@ -119,7 +117,7 @@
             </div>
             <div>
                 <ul class="list">
-                    <li>
+                    <!-- <li>
                         <img src="" alt="">
                         <h3></h3>
                         <p></p>
@@ -148,50 +146,11 @@
                         <img src="" alt="">
                         <h3></h3>
                         <p></p>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>
-        <!-- <!-- <div > 
-            <div class="cont_wrapper">
-                <h2><a href="">인기아티스트</a></h2>
-                <p><a href="">모두보기</a></p>
-            </div>
-            <div>
-                <ul class="list">
-                    <li>
-                        <img src="" alt="">
-                        <h3></h3>
-                        <p></p>
-                    </li>
-                    <li>
-                        <img src="" alt="">
-                        <h3></h3>
-                        <p></p>
-                    </li>
-                    <li>
-                        <img src="" alt="">
-                        <h3></h3>
-                        <p></p>
-                    </li>
-                    <li>
-                        <img src="" alt="">
-                        <h3></h3>
-                        <p></p>
-                    </li>
-                    <li>
-                        <img src="" alt="">
-                        <h3></h3>
-                        <p></p>
-                    </li>
-                    <li>
-                        <img src="" alt="">
-                        <h3></h3>
-                        <p></p>
-                    </li>
-                </ul>
-            </div>
-        </div> -->
+        
         <div > 
             <div class="cont_wrapper">
                 <h2><a href="">인기아티스트</a></h2>
@@ -199,7 +158,7 @@
             </div>
             <div>
                 <ul class="list">
-                    <li>
+                    <!-- <li>
                         <img src="" alt="">
                         <h3></h3>
                         <p></p>
@@ -228,7 +187,7 @@
                         <img src="" alt="">
                         <h3></h3>
                         <p></p>
-                    </li>
+                    </li> -->
                     
                 </ul>
                 <div id="lastfooter"></div>
@@ -259,19 +218,134 @@
         </div> <!--볼륨조절 -->
     </div>
 
-    <!-- 상단 메뉴바 스크립트 -->
+    <script src="../../GSKim/EZen/Javascript/node_modules/axios/dist/axios.min.js"></script>
     <script>
-        function w3_open() {
-          document.getElementById("main").style.marginLeft = "25%";
-          document.getElementById("mySidebar").style.width = "25%";
-          document.getElementById("mySidebar").style.display = "block";
-          document.getElementById("openNav").style.display = 'none';
-        }
-        function w3_close() {
-          document.getElementById("main").style.marginLeft = "0%";
-          document.getElementById("mySidebar").style.display = "none";
-          document.getElementById("openNav").style.display = "inline-block";
-        }
+
+        const list1 = document.querySelector('#list1');
+        const clientId = '7dad908171c54d1bbd78abda9ca2471d';
+        const clientSecret = 'ada97055bcf849f1b40c0c882c4816a1';
+        const token = null;
+        document.querySelector('#search_wrapper').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const queryField = document.querySelector('#search');
+            queryKeyword = queryField.value.trim();
+
+            if (!queryKeyword) {  // 검색어를 입력하지 않았을 때
+                alert('검색어를 입력하세요');
+                queryField.focus();
+                return;
+            }
+            get_music_search();
+
+        });
+
+        async function get_music_search(token) {
+
+            const list = document.querySelector('#list');
+
+            // Array.from(list.getElementsByTagName('li')).map((v, i) => {
+            //     list.removeChild(v);
+            // });
+            
+            let json = null;
+
+            try {
+                    json = await axios.get('https://api.spotify.com/v1/search?type=album&include_external', {
+                        params: {
+                            query: queryKeyword,
+                        },
+                        headers: {
+                            'Authorization' : 'Bearer BQD9HJwoWrl0jv61uT6ZsC8KnDKAbya5PY6fKpqSMp8VHdl4IbaIGzb1VYJQniq2g71HfKSfTnusVHKLpd_jUhhHtTyuBb7sulK4hpCpo5weHXmIsj-pSxaLceXSifvXuXo8bb1jZWHwlI46Vkk5UHjlmD2aQMslHvNdGzgKZ5bGBQb7-jRH9yIodM1am601Qchk5JZwjWULB-5_xpgRyyrVVVpghVT4Yrljf_i1mQ5RWF6NVm0pLyWuvw',
+                        },
+                    });
+                    console.log(token);
+// BQA_vXdTu-_oBUb8dPX0BUxKT8NxOTapa7JtZTt1pBwcPZt7iKQFvTBzcPoB91pZWGvrOWy6K0Lumjoa7JdiivrtJzNZcySCdxIWU0phg4hYkbnhsmPmpnnTfs7_HxhwACzbmnJIvCWCoMoKgMikRhRdnsEdqCJUrcSPqCofhTEzr-S17Syd6KU670iEmNFU1c2XfgDmniY7duyd8kYKlw
+                    // 응답 결과 확인
+                    console.log(json);
+                }
+                catch (error) {
+                    console.error(`[Error Code] ${error.code}`);
+                    console.error(`[Error Message] ${error.message}`);
+                    let alertMsg = error.message;
+
+                    if (error.response !== undefined) {
+                        const errorMsg = `${error.response.status} error - ${error.response.statusText}`;
+                        console.error(`[HTTP Status] ${errorMsg}`);
+
+                        alertMsg += `\n${errorMsg}`;
+                    }
+                    alert(alertMsg);
+                    return;
+                }
+
+                const { data } = json;
+
+                data.albums['items'].map((v, i) => {
+                    console.log(v);
+                    console.log(v.name);
+
+                    const li = document.createElement('li');
+                    list1.appendChild(li);
+
+                    const a = document.createElement('a');
+                    a.setAttribute('href', v.external_urls);
+                    a.setAttribute('target', '_blank');
+                    li.appendChild(a);
+                    
+                    const img = document.createElement('img');
+                    img.setAttribute('src', v.images[0].url);
+                    a.appendChild(img);
+
+                    const title = document.createElement('span');
+                    title.innerHTML = v.name;
+                    li.appendChild(title);
+                }); 
+
+            const APIController = (function() {
+
+            // private methods
+            const _getToken = async () => {
+
+                const result = await fetch('https://accounts.spotify.com/api/token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type' : 'application/x-www-form-urlencoded', 
+                        'Authorization' : 'Basic ' + btoa(clientId + ':' + clientSecret)
+                    },
+                    body: 'grant_type=client_credentials'
+                });
+                console.log(clientId);
+                console.log(clientSecret);
+
+                tokenData = await result.json();
+                console.log(tokenData);
+                return tokenData.access_token;
+            }
+
+            return {
+                getToken() {
+                    return _getToken();
+                },
+            }
+        })();
+
+
+        // UI Module
+        const UIController = (function() {
+            //public methods
+            return {
+
+                //method to get input fields
+                inputField() {
+                    return {
+
+                    }
+                },
+            }
+
+        })();
+    }
     </script>
 
 </body>
