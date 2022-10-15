@@ -198,10 +198,10 @@ h2 {
 /* playlist */
 .playlistWrapper .playList {
   margin: auto;
-  width: 97%;
+  width: 100%;
   height: auto;
-  box-shadow: -1px 1px 7px 2px rgb(0, 0, 0);
-  box-sizing: border-box;
+  box-shadow: 0px 0px 7px 2px rgb(0, 0, 0);
+  /* box-sizing: border-box; */
   margin-bottom: 20px;
   border-radius: 7px;
   transition-property: all;
@@ -209,9 +209,9 @@ h2 {
   transition-timing-function: ease-in;
 }
 
-.playlistWrapper .playList ul li {
+/* .playlistWrapper .playList ul li {
   height: 360px;
-}
+} */
 /* .playlistWrapper .playList ul li:hover {
   
 } */
@@ -236,10 +236,10 @@ h2 {
   display: block;
 }
 .pList_title_wrapper {
-  padding-left: 30px;
+  padding-left: 20px;
   box-sizing: border-box;
   display: block;
-  width: 76%;
+  width: 60%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
