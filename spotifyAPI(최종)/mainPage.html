@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>S4TIFY</title>
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/style.css" />
+
+    <!--폰트-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Black+Han+Sans&family=Do+Hyeon&display=swap" rel="stylesheet"/>
+
+    <!-- 아이콘 -->
+    <script src="https://kit.fontawesome.com/f0e73cfa04.js" crossorigin="anonymous"></script>
+
+    <!--AOS-->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="loading"></div>
+
+    <div class="header">
+      <div class="logo">
+        <a href="index.html" id="logo">S4TIFY</a>
+      </div>
+      <div>
+        <form id="search_wrapper">
+          <input
+            type="search"
+            id="search"
+            placeholder="어떤 음악을 듣고 싶으세요?"
+          />
+          <button type="submit">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </form>
+      </div>
+      <div class="user_wrapper">
+        <button id="openSidebar"><i class="fa-solid fa-bars"></i></button>
+      </div>
+    </div>
+
+    <div class="side_bar">
+      <ul>
+        <li>
+          <i class="fa-solid fa-bookmark"></i>
+          <span>내 라이브러리</span>
+        </li>
+        <li>
+          <i class="fa-solid fa-square-plus"></i>
+          <span>플레이리스트 만들기</span>
+        </li>
+        <li>
+          <i class="fa-solid fa-heart"></i>
+          <span>좋아요 표시한 곡</span>
+        </li>
+      </ul>
+
+      <p>내플레이리스트 #1</p>
+      <p>내플레이리스트 #2</p>
+      <p>내플레이리스트 #3</p>
+      <p>내플레이리스트 #4</p>
+      <p>내플레이리스트 #5</p>
+      <p>내플레이리스트 #6</p>
+      <p>내플레이리스트 #7</p>
+      <p>내플레이리스트 #8</p>
+      <p>내플레이리스트 #9</p>
+      <p>내플레이리스트 #10</p>
+    </div>
+    <div class="main scroll_bar">
+      <div class="cont_wrapper"></div>
+      <div class="playlistWrapper"></div>
+      <ul class="list" id="list1"></ul>
+      <!-- <div ">class="list" id="list1 -->
+      <!-- </div> -->
+    </div>
+
+    <script src="../../../node_modules/axios/dist/axios.min.js"></script>
+    <script>
+      AOS.init();
+
+      let page = 1;
+
+      const list1 = document.querySelector("#list1");
+      const list = document.querySelector(".list");
+      const contWrapper = document.querySelector(".cont_wrapper");
+      const playlistWrapper = document.querySelector(".playlistWrapper");
+
+      (async () => {
+        let response = null;
+
+        try {
+          response = await axios.get(
+            "https://api.spotify.com/v1/browse/featured-playlists",
+            {
+              params: {},
+              headers: {
+                Authorization:
+                  "Bearer BQCJj_16HbrRE8PKGMY7d8VoQwvlTx5Au6s-umu_LLJ4fpZ7n3WYrL3Q2IoJcfOSNJrIKIJwkd82baaWm04JqoraodwpTFr8jm3Ji195abjh9ZB9DdbPB8RSF-x0vlFPRAP4jqYviPnpCrAJQsj56rQlLZGWhnc4QKMcWDxelK5ACGBtlxnAmvTHHr8d8xeXrcfoDzmKTn4QHXjARF-enr11McNYnO2ldSnJc5Yz-hu_TI3Ow9T4F2s2GLcRww",
+              },
+            }
+          );
+          console.log(response);
+        } catch (error) {
+          // Axios의 기본 에러 메시지를 추출하여 문자열로 구성
+          console.error(`[Error Code] ${error.code}`);
+          console.error(`[Error Message] ${error.message}`);
+          let alertMsg = error.message;
+
+          // HTTP 상태메시지가 포함되어 있다면 해당 내용을 에러 문자열에 추가
+          if (error.response !== undefined) {
+            const errorMsg = `${error.response.status} error - ${error.response.statusText}`;
+            console.error(`[HTTP Status] ${errorMsg}`);
+            alertMsg += `\n${errorMsg}`;
+          }
+
+          // 메시지박스로 에러 내용 표시
+          alert(alertMsg);
+          return;
+        }
+
+        const { data } = response;
+        console.log(data);
+
+        data.playlists.items.map((v, i) => {
+          // contWrapper.classList.add('aos_play');
+
+          const div = document.createElement("div");
+          div.setAttribute("data-aos", "fade-down-linear");
+          div.setAttribute("data-aos-offset", "300");
+          div.setAttribute("data-aos-duration", "500");
+          div.classList.add("playList");
+          playlistWrapper.appendChild(div);
+
+          const ul = document.createElement("ul");
+          // ul.setAttribute('aos-data','zoom-in')
+          div.appendChild(ul);
+
+          const li = document.createElement("li");
+          // li.setAttribute('data-aos','fade-up')
+          // li.classList.add('playList')
+          ul.appendChild(li);
+
+          const a = document.createElement("a");
+          a.setAttribute("href", v.external_urls.spotify);
+          a.classList.add("pList_btn");
+          li.appendChild(a);
+
+          const img = document.createElement("img");
+          img.setAttribute("src", v.images[0].url);
+          img.classList.add("pList_img");
+          a.appendChild(img);
+
+          const titleWrapper = document.createElement("span");
+          titleWrapper.classList.add("pList_title_wrapper");
+          li.appendChild(titleWrapper);
+
+          const title = document.createElement("a");
+          title.classList.add("pList_name");
+          titleWrapper.appendChild(title);
+
+          const dsc = document.createElement("a");
+          dsc.innerHTML = v.description;
+          dsc.classList.add("pList_dsc");
+          titleWrapper.appendChild(dsc);
+
+          const a2 = document.createElement("a");
+          a2.setAttribute("href", v.external_urls.spotify);
+          a2.innerHTML = v.name;
+          a2.classList.add("title");
+          title.appendChild(a2);
+          console.log("~~~");
+          AOS.refreshHard();
+        });
+      })();
+
+      document
+        .querySelector("#search_wrapper")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          if (playlistWrapper.children) {
+            console.log(playlistWrapper.children);
+            Array.from(playlistWrapper.children).forEach((v, i) => {
+              console.log(v);
+              playlistWrapper.removeChild(v);
+            });
+          }
+
+          const loading = document.querySelector("#loading");
+          loading.classList.add("active");
+
+          const queryField = document.querySelector("#search");
+          queryKeyword = queryField.value.trim();
+
+          if (!queryKeyword) {
+            // 검색어를 입력하지 않았을 때
+            alert("검색어를 입력하세요");
+            queryField.focus();
+            return;
+          }
+          get_music_search();
+
+          if (contWrapper.children) {
+            console.log(contWrapper.children);
+            Array.from(contWrapper.children).forEach((v, i) => {
+              console.log(v);
+              contWrapper.removeChild(v);
+            });
+          }
+
+          const h2 = document.createElement("h2");
+          h2.innerHTML = queryKeyword.toUpperCase();
+          contWrapper.appendChild(h2);
+
+          // 검색결과 모두보기
+          const p = document.createElement("p");
+          contWrapper.appendChild(p);
+          const a = document.createElement("a");
+          a.innerHTML = "모두보기";
+          p.appendChild(a);
+        });
+
+      async function get_music_search(token) {
+        let json = null;
+
+        try {
+          json = await axios.get(
+            "https://api.spotify.com/v1/search?type=album&include_external",
+            {
+              params: {
+                query: queryKeyword,
+              },
+              headers: {
+                Authorization:
+                  "Bearer BQCJj_16HbrRE8PKGMY7d8VoQwvlTx5Au6s-umu_LLJ4fpZ7n3WYrL3Q2IoJcfOSNJrIKIJwkd82baaWm04JqoraodwpTFr8jm3Ji195abjh9ZB9DdbPB8RSF-x0vlFPRAP4jqYviPnpCrAJQsj56rQlLZGWhnc4QKMcWDxelK5ACGBtlxnAmvTHHr8d8xeXrcfoDzmKTn4QHXjARF-enr11McNYnO2ldSnJc5Yz-hu_TI3Ow9T4F2s2GLcRww",
+              },
+            }
+          );
+          console.log(json);
+        } catch (error) {
+          console.error(`[Error Code] ${error.code}`);
+          console.error(`[Error Message] ${error.message}`);
+          let alertMsg = error.message;
+
+          if (error.response !== undefined) {
+            const errorMsg = `${error.response.status} error - ${error.response.statusText}`;
+            console.error(`[HTTP Status] ${errorMsg}`);
+
+            alertMsg += `\n${errorMsg}`;
+          }
+          alert(alertMsg);
+          return;
+        } finally {
+          // 로딩바 닫기
+          loading.classList.remove("active");
+        }
+
+        const { data } = json;
+
+        if (list1.children) {
+          console.log(list1.children);
+          Array.from(list1.children).forEach((v, i) => {
+            console.log(v);
+            list1.removeChild(v);
+          });
+        }
+
+        data.albums["items"].map((v, i) => {
+          console.log(v);
+          console.log(v.name);
+
+          const li = document.createElement("li");
+          li.classList.add("b_li");
+          list1.appendChild(li);
+
+          const a = document.createElement("a");
+          // console.log(v.external_urls.spotify));
+          a.setAttribute("href", v.external_urls.spotify);
+          a.classList.add("b_a");
+          // a.setAttribute('target', '_blank');
+          li.appendChild(a);
+
+          const img = document.createElement("img");
+          img.setAttribute("src", v.images[0].url);
+          img.classList.add("b_img");
+          a.appendChild(img);
+
+          const title = document.createElement("span");
+          title.classList.add("b_title");
+          li.appendChild(title);
+
+          const a2 = document.createElement("a");
+          a2.setAttribute("href", v.external_urls.spotify);
+          a2.innerHTML = v.name;
+          title.appendChild(a2);
+
+          console.log(json);
+
+          const state = { search: JSON.stringify(json) };
+          console.log(state);
+          const url = "index.html?page=" + ++page;
+
+          history.pushState(state, null, url);
+
+          window.addEventListener("popstate", (e) => {
+            if (e.state) {
+              console.log(e.state);
+              let json = JSON.parse(e.state.search);
+              console.log(json);
+              list.querySelector(".b_li").innerHTML =
+                json.data.albums.items[i] || "";
+            } else {
+              list.style.display = "none";
+            }
+          });
+        });
+      }
+    </script>
+    <script>
+      //사이드바
+      document.querySelector("#openSidebar").addEventListener("click", (e) => {
+        e.preventDefault();
+        const sideBar = document.querySelector(".side_bar");
+        if (sideBar.style.display == "none") {
+          document.querySelector(".main").style.marginRight = "16%";
+          document.querySelector(".main").style.width = "84%";
+          document.querySelector(".side_bar").style.display = "block";
+        } else {
+          document.querySelector(".main").style.marginRight = "0%";
+          document.querySelector(".main").style.width = "100%";
+          document.querySelector(".side_bar").style.display = "none";
+        }
+      });
+    </script>
+  </body>
+</html>
+
+
+
+@charset "utf-8";
+
+/* 공통 */
+html {
+  padding: 0 10px;
+  box-sizing: border-box;
+  /* overflow-y: hidden; */
+  font-family: "Audiowide", "Do Hyeon";
+  letter-spacing: 1px;
+}
+body {
+  position: relative;
+  width: 100%;
+  height: auto;
+  background-color: #000;
+  color: #fff;
+  box-sizing: border-box;
+  line-height: 1.5;
+  height: auto;
+  /* bottom: 70px;
+    top: 50px; */
+}
+body p {
+  color: #ccc;
+}
+
+a {
+  color: #fff;
+  text-decoration: none;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* top_nav 영역 */
+
+.header {
+  width: 100%;
+  height: 60px;
+  background-color: #0000;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  padding-right: 10px;
+  box-sizing: border-box;
+  position: fixed;
+  top: 0;
+  z-index: 9999;
+  margin-top: 5px;
+}
+
+.logo a {
+  color: #1bd760;
+  font-size: 40px;
+  /* margin-top: 10px; */
+  margin-left: 20px;
+  font-family: "Audiowide", cursive;
+}
+
+#search_wrapper {
+  display: flex;
+  padding-top: 2px;
+  box-sizing: border-box;
+
+  /* margin-left: -140px; */
+}
+/* #search {
+  background-color: black !important;
+} */
+#search_wrapper button {
+  cursor: pointer;
+  display: block;
+  width: 45px;
+  height: 45px;
+  line-height: 45px;
+  background-color: #272727;
+  color: #ccc;
+  font-weight: 100;
+  font-size: 18px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  margin-left: -45px;
+  border: none;
+}
+#search_wrapper button:hover {
+  color: #fff;
+}
+#search {
+  width: 380px;
+  height: 45px;
+  padding-top: 3px;
+  background-color: #272727;
+  border: none;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 15px;
+  text-indent: 20px;
+}
+.user_wrapper {
+  padding: 10px 20px;
+}
+
+#openSidebar {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  margin-left: 30px;
+  font-size: 30px;
+  color: #272727;
+}
+#openSidebar:hover {
+  color: rgb(190, 186, 186);
+}
+
+#openSidebar .fa-solid {
+  display: block;
+  top: 0;
+}
+
+/* sidebar 영역 */
+.side_bar {
+  width: 16%;
+  /* height: 705px; */
+  height: 1024px;
+
+  position: fixed;
+  top: 60px;
+  right: 0;
+  padding: 20px;
+  /* margin-top: 10px; */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background-color: #121212;
+  color: #ccc;
+  border-radius: 5px;
+  display: none;
+  z-index: 9999;
+}
+
+.side_bar ul li {
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.side_bar ul li:hover {
+  color: #fff;
+}
+
+.side_bar ul li:last-child {
+  border-bottom: 1px solid rgba(128, 127, 127, 0.2);
+  padding-bottom: 15px;
+}
+
+.side_bar ul li i {
+  margin-right: 20px;
+}
+
+.side_bar p {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+.side_bar p:hover {
+  color: #fff;
+}
+
+/* main  영역 */
+.main {
+  /* width: calc(100% - 220px); */
+  height: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 25px 18px;
+  box-sizing: border-box;
+  background-color: #121212;
+  border-radius: 5px;
+  margin-top: 10px;
+  margin-top: 60px;
+  /* overflow-y: scroll; */
+}
+
+.cont_wrapper {
+  width: 80%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.cont_wrapper h2 {
+  color: rgb(195, 195, 195);
+}
+
+.cont_wrapper p {
+  font-size: 12px;
+  color: rgb(195, 195, 195);
+  cursor: pointer;
+}
+.cont_wrapper p a {
+  color: rgb(195, 195, 195);
+}
+
+.cont_wrapper a:hover {
+  text-decoration: underline;
+  color: #fff;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: -20px;
+}
+.list li {
+  width: 15%;
+  background-color: #121212;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  text-align: center;
+  margin: 10px;
+  padding: 20px 10px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  margin: auto;
+}
+.list li:last-child {
+  margin: none;
+}
+
+.list li img {
+  width: 90%;
+  /* height: 230px; */
+  border-radius: 5px;
+  margin-bottom: 15px;
+  transition-property: all;
+  transition-duration: 0.5s;
+  transition-timing-function: ease-in;
+
+  /* position: relative; */
+}
+.list li img:hover {
+  width: 100%;
+  box-shadow: -1px 1px 10px 5px rgb(79, 79, 79);
+  /* transition-duration: 0.15s; */
+}
+
+.list li span a {
+  display: block;
+  color: #fff;
+  text-align: center;
+  font-size: 15px;
+  padding-bottom: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: -1px 1px 37px 14px rgba(0, 0, 0);
+}
+.list li span a:hover {
+  transition-duration: 0.15s;
+  color: #1bd760;
+  font-size: 17px;
+}
+
+/*playlist 수정부분 여기부터*/
+.playlistWrapper .playList {
+  margin: auto;
+  /* float: left; */
+  width: 97%;
+  height: auto;
+  box-shadow: -1px 1px 7px 2px rgb(0, 0, 0);
+  padding: 30px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  border-radius: 7px;
+  box-sizing: border-box;
+  transition-property: all;
+  transition-duration: 0.5s;
+  transition-timing-function: ease-in;
+}
+/* .playlistWrapper .playList:hover {
+  width: 330px;
+  transition-duration: 2s;
+  box-shadow: -1px 1px 7px 2px rgb(234, 30, 48, 1);
+  width: 100%;
+} */
+
+.playlistWrapper .playList ul li a {
+  float: left;
+}
+.playlistWrapper .playList ul li a img {
+  width: 300px;
+  border-radius: 7px;
+  /* float: left; */
+}
+.playlistWrapper .playList ul li a img:hover {
+  transition-duration: 0.7s;
+  box-shadow: 0px 0px 28px rgba(0, 777, 0, 0.8), 0 -10px 20px -5px #fff;
+  width: 310px;
+}
+/* .playlistWrapper .playList ul li a img:hover {
+  width: 330px;
+  transition-duration: 0.15s;
+  box-shadow: -1px 1px 7px 2px rgb(234, 30, 48, 1);
+} */
+
+.playlistWrapper .playList ul li::after {
+  content: " ";
+  clear: both;
+  display: block;
+}
+.pList_title_wrapper {
+  padding-left: 30px;
+  box-sizing: border-box;
+  display: block;
+  width: 76%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pList_title_wrapper ::after {
+  content: " ";
+  clear: both;
+  display: block;
+}
+/* .pList_title_wrapper::after {
+  content: " ";
+  clear: both;
+  display: block;
+} */
+/* .pList_title_wrapper::after {
+  content: " ";
+  clear: both;
+  display: block;
+} */
+.pList_title_wrapper .pList_name {
+  font-size: 50px;
+  display: block;
+  width: 100%;
+  float: left;
+  margin-top: 70px;
+}
+
+.pList_title_wrapper .pList_name .title {
+  display: block;
+  transition-property: all;
+  transition-duration: 0.08s;
+  transition-timing-function: ease-out;
+}
+/* float: left; */
+/* width: 100%; */
+/* }
+.pList_title_wrapper .pList_name .title:hover {
+  color: #1bd760;
+  transition-duration: 0.1s;
+  font-size: 55px;
+} */
+.pList_dsc {
+  display: block;
+  width: 90%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-top: 40px;
+  padding-left: 10px;
+  box-sizing: border-box;
+}
+
+/* .pList_dsc:hover {
+  font-size: 20px;
+} */
+/**여기까지*/
+
+/* 스크롤바 */
+/* 스크롤의 너비 */
+body::-webkit-scrollbar {
+  width: 13px;
+}
+/* 스크롤의 길이 및 색상 */
+body::-webkit-scrollbar-thumb {
+  background: #272727;
+}
+body::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(68, 67, 67);
+}
+/* 스크롤바 뒷 배경 색상 */
+body::-webkit-scrollbar-track {
+  background: #121212;
+}
+/* 스크롤 주고자하는 부분의 height를 정해줘야 생김. */
+
+/*
+1. F11 눌러서 전체화면 했을 때 하단 여백 너무 많음 
+2. 하단 .now_playing 하트 버튼 눌렀을 때 ' 내 라이브러리에 추가하기' 문구 넣기
+3. 볼륨컨트롤러 색상 및 사이즈 지정
+4. 볼륨 아이콘 눌렀을 때 뮤트설정하기.
+ */
